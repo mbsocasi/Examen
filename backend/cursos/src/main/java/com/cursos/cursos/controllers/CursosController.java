@@ -20,17 +20,11 @@ public class CursosController {
     @Autowired
     private CursosService cursosService;
 
-    /**
-     * Get all courses
-     */
     @GetMapping
     public ResponseEntity<List<Cursos>> findAll() {
         return ResponseEntity.ok(cursosService.findAll());
     }
 
-    /**
-     * Get a course by ID
-     */
     @GetMapping("/{id}")
     public ResponseEntity<Cursos> findById(@PathVariable Long id) {
         return cursosService.findById(id)
@@ -38,17 +32,11 @@ public class CursosController {
                 .orElse(ResponseEntity.notFound().build());
     }
 
-    /**
-     * Create a new course
-     */
     @PostMapping
     public ResponseEntity<Cursos> save(@Valid @RequestBody Cursos curso) {
         return ResponseEntity.status(201).body(cursosService.save(curso));
     }
 
-    /**
-     * Update an existing course
-     */
     @PutMapping("/{id}")
     public ResponseEntity<Cursos> update(@PathVariable Long id, @Valid @RequestBody Cursos updatedCurso) {
         return cursosService.findById(id)
@@ -62,9 +50,7 @@ public class CursosController {
                 .orElse(ResponseEntity.notFound().build());
     }
 
-    /**
-     * Delete a course by ID (with success message)
-     */
+
     @DeleteMapping("/{id}")
     public ResponseEntity<Map<String, String>> deleteById(@PathVariable Long id) {
         Optional<Cursos> cursoExistente = cursosService.findById(id);
@@ -78,17 +64,13 @@ public class CursosController {
         }
     }
 
-    /**
-     * Get all materials (from the Materials microservice)
-     */
+
     @GetMapping("/materiales")
     public ResponseEntity<List<Materiales>> getAllMaterials() {
         return ResponseEntity.ok(cursosService.getAllMaterials());
     }
 
-    /**
-     * Add a material to a course
-     */
+
     @PostMapping("/{cursoId}/materiales")
     public ResponseEntity<Cursos> addMaterial(@PathVariable Long cursoId, @Valid @RequestBody Materiales material) {
         return cursosService.addMaterial(cursoId, material)
@@ -96,9 +78,7 @@ public class CursosController {
                 .orElse(ResponseEntity.notFound().build());
     }
 
-    /**
-     * Remove a material from a course (with success message)
-     */
+
     @DeleteMapping("/{cursoId}/materiales/{materialId}")
     public ResponseEntity<Map<String, String>> removeMaterial(@PathVariable Long cursoId, @PathVariable Long materialId) {
         Optional<Cursos> cursoActualizado = cursosService.removeMaterial(cursoId, materialId);
@@ -109,5 +89,23 @@ public class CursosController {
         } else {
             return ResponseEntity.notFound().build();
         }
+    }
+
+
+    @GetMapping("/materiales/{materialId}")
+    public ResponseEntity<List<String>> findCursoNamesByMaterial(@PathVariable Long materialId) {
+        List<String> cursoNombres = cursosService.findCursoNamesByMaterialId(materialId);
+        if (cursoNombres.isEmpty()) {
+            return ResponseEntity.notFound().build();
+        }
+        return ResponseEntity.ok(cursoNombres);
+    }
+    @GetMapping("/{cursoId}/materialess")
+    public ResponseEntity<List<String>> findMaterialNamesByCurso(@PathVariable Long cursoId) {
+        List<String> materialNombres = cursosService.findMaterialNamesByCursoId(cursoId);
+        if (materialNombres.isEmpty()) {
+            return ResponseEntity.notFound().build();
+        }
+        return ResponseEntity.ok(materialNombres);
     }
 }

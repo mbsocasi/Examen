@@ -10,5 +10,7 @@ public interface MaterialesService {
     Optional<Materiales> findById(Long id);
     Materiales save(Materiales material);
     void deleteById(Long id);
-    Materiales update(Long id, Materiales material); // Nuevo método
+
+    // Nuevo método para actualizar materiales
+    Materiales update(Long id, Materiales material);
 }

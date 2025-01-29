@@ -2,6 +2,7 @@ package com.materiales.materiales.contoller;
 
 import com.materiales.materiales.models.entities.Materiales;
 import com.materiales.materiales.services.MaterialesService;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -40,8 +41,16 @@ public class MaterialesController {
      * Create a new material
      */
     @PostMapping
-    public ResponseEntity<Materiales> save(@RequestBody Materiales material) {
+    public ResponseEntity<Materiales> save(@Valid @RequestBody Materiales material) {
         return ResponseEntity.ok(service.save(material));
+    }
+
+    /**
+     * Update an existing material
+     */
+    @PutMapping("/{id}")
+    public ResponseEntity<Materiales> update(@PathVariable Long id, @Valid @RequestBody Materiales material) {
+        return ResponseEntity.ok(service.update(id, material));
     }
 
     /**

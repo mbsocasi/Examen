@@ -10,6 +10,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 public class CursosServiceImpl implements CursosService {
@@ -64,5 +65,37 @@ public class CursosServiceImpl implements CursosService {
     @Override
     public List<Materiales> getAllMaterials() {
         return materialesClient.findAll();
+    }
+
+
+    @Override
+    public List<String> findCursoNamesByMaterialId(Long materialId) {
+        return ((List<Cursos>) repository.findAll())
+                .stream()
+                .filter(curso -> curso.getCursoMateriales()
+                        .stream()
+                        .anyMatch(material -> material.getMaterialId().equals(materialId)))
+                .map(Cursos::getNombre) // Extrae solo los nombres de los cursos
+                .collect(Collectors.toList());
+    }
+    @Override
+    public List<String> findMaterialNamesByCursoId(Long cursoId) {
+        Optional<Cursos> cursoOpt = repository.findById(cursoId);
+
+        if (cursoOpt.isPresent()) {
+            Cursos curso = cursoOpt.get();
+            List<Long> materialIds = curso.getCursoMateriales()
+                    .stream()
+                    .map(material -> material.getMaterialId())
+                    .collect(Collectors.toList());
+
+            return materialesClient.findAll()
+                    .stream()
+                    .filter(material -> materialIds.contains(material.getId()))
+                    .map(Materiales::getNombre)
+                    .collect(Collectors.toList());
+        }
+
+        return List.of();
     }
 }

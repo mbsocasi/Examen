@@ -13,10 +13,14 @@ public interface CursosService {
     Cursos save(Cursos curso);
     void deleteById(Long id);
 
-    // Métodos agregados
+    // Métodos relacionados con materiales
     Optional<Cursos> addMaterial(Long cursoId, Materiales material);
     Optional<Cursos> removeMaterial(Long cursoId, Long materialId);
-
-    // Método para obtener todos los materiales
     List<Materiales> getAllMaterials();
+
+    // Nuevo método para buscar cursos por material
+    List<String> findCursoNamesByMaterialId(Long materialId);
+    List<String> findMaterialNamesByCursoId(Long cursoId);
+
+
 }
